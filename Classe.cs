@@ -25,7 +25,9 @@ namespace TPMoyennes
                 Console.Write("error, trop d'élèves");
                 return;
             }
-            eleves.Add(new Eleve(firstname, lastname));
+            Eleve _newEleve = new Eleve(firstname, lastname);
+            _newEleve.classe = this;
+            eleves.Add(_newEleve);
         }
 
         public void ajouterMatiere(string matiere)
@@ -42,8 +44,12 @@ namespace TPMoyennes
         {
             float _moyenne = 0;
             int _counter = 0;
+            float _moyenneTotal = 0;
             foreach (Eleve eleve in eleves)
             {
+                _moyenne = 0;
+                _counter = 0;
+
                 foreach (Note note in eleve.notes)
                 {
                     if (note.matiere == i)
@@ -52,6 +58,14 @@ namespace TPMoyennes
                         _counter++;
                     }
                 }
+                if (_counter == 0)
+                {
+                    //Dislay error
+                    return 0;
+                }
+
+                _moyenne = _moyenne / _counter;
+                _moyenneTotal += _moyenne;
             }
             if (_counter == 0)
             {
@@ -59,32 +73,57 @@ namespace TPMoyennes
                 return 0;
             }
 
-            _moyenne = _moyenne / _counter;
+            _moyenneTotal = _moyenneTotal / eleves.Count();
 
-            return (float)Math.Round(_moyenne, 2);
+            return (float)Math.Round(_moyenneTotal, 2);
         }
 
         public float moyenneGeneral()
         {
             float _moyenne = 0;
+            float _moyeneInter = 0;
+            float _moyenneTotal = 0;
             int _counter = 0;
-            foreach (Eleve eleve in eleves)
+
+            for (int i = 0; i < matieres.Count(); i++)
             {
-                foreach (Note note in eleve.notes)
+                _moyenne = 0;
+                _counter = 0;
+                foreach (Eleve eleve in eleves)
                 {
-                    _moyenne += note.note;
-                    _counter++; 
+                    _moyenne = 0;
+                    _counter = 0;
+
+                    foreach (Note note in eleve.notes)
+                    {
+                        if (note.matiere == i)
+                        {
+                            _moyenne += note.note;
+                            _counter++;
+                        }
+                    }
+                    if (_counter == 0)
+                    {
+                        //Dislay error
+                        return 0;
+                    }
+
+                    _moyenne = _moyenne / _counter;
+
+                    _moyeneInter += _moyenne;
+
                 }
-            }
-            if (_counter == 0)
-            {
-                //Dislay error
-                return 0;
+                _moyeneInter = _moyeneInter / eleves.Count();
+
+                _moyenneTotal += _moyeneInter;
+
             }
 
-            _moyenne = _moyenne / _counter;
 
-            return (float)Math.Round(_moyenne, 2);
+
+            _moyenneTotal = _moyenneTotal / matieres.Count();
+
+            return (float)Math.Round(_moyenneTotal, 2);
         }
     }
 }

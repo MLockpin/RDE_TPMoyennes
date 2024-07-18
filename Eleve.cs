@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,8 @@ namespace TPMoyennes
         }
 
         internal List<Note> notes = new List<Note>();
+
+        public Classe classe;
 
         internal void ajouterNote(Note note)
         {
@@ -56,17 +59,29 @@ namespace TPMoyennes
         public float moyenneGeneral()
         {
             float _moyenne = 0;
+            float _moyenneTotal = 0;
             int _counter = 0;
 
-            foreach (Note note in notes)
+            for (int i = 0; i < classe.matieres.Count(); i++)
             {
-                _moyenne += note.note;
-                _counter++;
+                _moyenne = 0;
+                _counter = 0;
+
+                foreach (Note note in notes)
+                {
+                    if (note.matiere == i)
+                    {
+                        _moyenne += note.note;
+                        _counter++;
+                    }
+                }
+                _moyenne = _moyenne / _counter;
+                _moyenneTotal += _moyenne;
             }
 
-            _moyenne = _moyenne / _counter;
+            _moyenneTotal = _moyenneTotal / classe.matieres.Count;
 
-            return (float)Math.Round(_moyenne, 2);
+            return (float)Math.Round(_moyenneTotal, 2);
         }
     }
 }
